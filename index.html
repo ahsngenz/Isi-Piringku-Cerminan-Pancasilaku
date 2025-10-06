@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isi Piringku, Cerminan Pancasilaku</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://images2.imgbox.com/26/d0/x4saGdrS_o.png">
+    <link rel="apple-touch-icon" href="https://images2.imgbox.com/26/d0/x4saGdrS_o.png">
+
+    <!-- Open Graph Meta Tags untuk Thumbnail Saat Share -->
+    <meta property="og:title" content="Isi Piringku, Cerminan Pancasilaku" />
+    <meta property="og:description" content="Sebuah kampanye interaktif untuk memahami nilai-nilai luhur Pancasila melalui panduan gizi seimbang." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ahsngenz.github.io/Isi-Piringku-Cerminan-Pancasilaku/" />
+    <meta property="og:image" content="https://images2.imgbox.com/26/d0/x4saGdrS_o.png" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Isi Piringku, Cerminan Pancasilaku">
+    <meta name="twitter:description" content="Sebuah kampanye interaktif untuk memahami nilai-nilai luhur Pancasila melalui panduan gizi seimbang.">
+    <meta name="twitter:image" content="https://images2.imgbox.com/26/d0/x4saGdrS_o.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        .highlight-text {
+            background-color: #FFFBEB;
+            border-left: 4px solid #FBBF24;
+        }
+        
+        .sila-card {
+            border: 3px solid transparent;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.4s ease;
+        }
+        .sila-card:target {
+            border-color: #F59E0B;
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+        
+        .plate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 2fr;
+            grid-template-areas: "lauk buah" "pokok sayur";
+            gap: 4px;
+        }
+        .grid-buah { grid-area: buah; }
+        .grid-lauk { grid-area: lauk; }
+        .grid-pokok { grid-area: pokok; }
+        .grid-sayur { grid-area: sayur; }
+
+        .text-with-shadow { text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8); }
+
+        @keyframes bounce-click {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .clicked-animation { animation: bounce-click 0.4s ease-out; }
+
+        .interactive-glow {
+            position: relative;
+            z-index: 1;
+        }
+        .interactive-glow::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: rgba(251, 191, 36, 0.7);
+            border-radius: inherit;
+            filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .highlighted.interactive-glow::before {
+            opacity: 1;
+        }
+
+        .detail-penjelasan {
+            transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out, margin-top 0.5s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        .detail-penjelasan.expanded {
+            max-height: 200px; 
+            opacity: 1;
+            margin-top: 1rem;
+            overflow: visible;
+        }
+
+        .has-tooltip {
+            position: relative;
+            cursor: pointer; 
+            border-bottom: 1px dotted #6b7280; 
+        }
+        .tooltip-text {
+            visibility: hidden; opacity: 0;
+            width: max-content; max-width: 200px;
+            background-color: #1f2937; color: #fff;
+            text-align: center; border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute; z-index: 20;
+            bottom: 125%; left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 0.3s ease;
+            pointer-events: none; font-size: 0.875rem; font-weight: 500;
+        }
+        .tooltip-text::after {
+            content: ""; position: absolute;
+            top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-visible { visibility: visible; opacity: 1; }
+
+        .modal { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes spinIn {
+            from { transform: rotate(-180deg) scale(0.5); opacity: 0; }
+            to { transform: rotate(0deg) scale(1); opacity: 1; }
+        }
+        .garuda-animation {
+            animation: spinIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: 0.5s;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <!-- JUDUL UTAMA -->
+        <header class="text-center mb-10 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-amber-800 tracking-tight leading-tight">
+                Isi Piringku, Cerminan Pancasilaku
+            </h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                <span id="campaign-trigger" class="font-semibold text-amber-700 underline cursor-pointer hover:text-amber-600 transition-colors">Sebuah kampanye</span> untuk memahami nilai-nilai luhur Pancasila melalui panduan gizi seimbang dalam makanan kita sehari-hari.
+            </p>
+            <!-- Tombol Share -->
+            <div id="share-button-container" class="mt-6">
+                <button id="share-button" class="bg-amber-600 text-white font-bold py-2 px-6 rounded-full hover:bg-amber-700 transition-colors shadow-lg flex items-center mx-auto">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path></svg>
+                    Bagikan
+                </button>
+                <div id="share-options" class="hidden mt-2 flex justify-center gap-3">
+                    <a id="share-whatsapp" href="#" target="_blank" class="p-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors" title="Bagikan ke WhatsApp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg>
+                    </a>
+                    <a id="share-twitter" href="#" target="_blank" class="p-3 bg-gray-800 text-white rounded-full hover:bg-gray-900 transition-colors" title="Bagikan ke X">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">  <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>
+                    </a>
+                    <button id="copy-link-button" class="p-3 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors flex items-center" title="Salin Link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">  <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg>
+                    </button>
+                    <button id="qr-code-button" class="p-3 bg-stone-800 text-white rounded-full hover:bg-stone-900 transition-colors flex items-center" title="Tampilkan QR Code">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-qr-code-scan" viewBox="0 0 16 16">  <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5M.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5M4 4h1v1H4z"/>  <path d="M7 2H2v5h5zM3 3h3v3H3zm2 8H4v1h1z"/>  <path d="M7 9H2v5h5zm-4 1h3v3H3zm8-6h1v1h-1z"/>  <path d="M9 2h5v5H9zm1 1v3h3V3zM8 8v2h1v1H8v1h2v-2h1v2h1v-1h2v-1h-3V8zm2 2H9V9h1zm4 2h-1v1h-2v1h3zm-4 2v-1H8v1z"/>  <path d="M12 9h2V8h-2z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- AREA VISUAL UTAMA  -->
+        <div id="piring-container" class="relative max-w-lg mx-auto mb-12 rounded-full interactive-glow">
+            <div class="plate-grid aspect-square w-full rounded-full overflow-hidden shadow-2xl ring-4 ring-white/50 bg-white">
+                <a href="#sila-1" id="piring-buah" class="grid-buah relative overflow-hidden group interactive-glow">
+                    <img src="https://images.pexels.com/photos/5677921/pexels-photo-5677921.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Buah-buahan" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="relative top-4 text-yellow-100 text-sm text-center font-bold text-with-shadow">Buah-buahan<br>2-3 porsi</span>
+                    </div>
+                </a>
+                <a href="#sila-3" id="piring-lauk" class="grid-lauk relative overflow-hidden group interactive-glow">
+                    <img src="https://images.pexels.com/photos/23858842/pexels-photo-23858842.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Lauk-pauk" class="w-full h-full object-cover">
+                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="relative top-4 text-yellow-100 text-sm text-center font-bold text-with-shadow">Lauk-Pauk<br>2-3 porsi</span>
+                    </div>
+                </a>
+                <a href="#sila-5" id="piring-pokok" class="grid-pokok relative overflow-hidden group interactive-glow">
+                    <img src="https://images.pexels.com/photos/4110250/pexels-photo-4110250.jpeg" alt="Makanan Pokok" class="w-full h-full object-cover">
+                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="relative top-6 text-yellow-100 text-sm text-center font-bold text-with-shadow">Makanan Pokok<br>3-4 porsi</span>
+                    </div>
+                </a>
+                <a href="#sila-2" id="piring-sayur" class="grid-sayur relative overflow-hidden group interactive-glow">
+                    <img src="https://images.pexels.com/photos/2955794/pexels-photo-2955794.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Sayur-mayur" class="w-full h-full object-cover">
+                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="relative top-6 text-yellow-100 text-sm text-center font-bold text-with-shadow">Sayur-mayur<br>3-4 porsi</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="absolute inset-0 flex justify-center items-center pointer-events-none z-10">
+                <a href="#semua-sila" id="garuda-link" class="w-2/5 h-2/5 pointer-events-auto group rounded-full garuda-animation interactive-glow">
+                    <div class="w-full h-full bg-amber-50 rounded-full flex justify-center items-center shadow-lg ring-2 ring-white/50 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                        <img src="https://images2.imgbox.com/26/d0/x4saGdrS_o.png" alt="Garuda Pancasila" class="w-4/5 h-4/5 object-contain relative top-2">
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
+        <!-- KONTEN BUTIR SILA -->
+        <main id="semua-sila" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div data-href="#piring-buah" class="sila-link block rounded-lg cursor-pointer interactive-glow">
+                <div id="sila-1" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 sila-card h-full">
+                    <div class="flex items-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Pancasila_Sila_1_Star.svg/1024px-Pancasila_Sila_1_Star.svg.png" alt="Lambang Sila ke-1" class="h-10 w-10 mr-3 object-contain cursor-pointer sila-icon-trigger" data-sila-id="1">
+                        <h2 class="text-xl font-bold text-amber-700">
+                            <span class="has-tooltip">Sila ke-1: Syukuri<span class="tooltip-text">Ketuhanan Yang Maha Esa</span></span>
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 detail-penjelasan">
+                        <span class="has-tooltip">Terhubung ke kuadran <span class="font-semibold">Buah-buahan</span>.<span class="tooltip-text">mensyukuri hasil bumi anugerah Tuhan</span></span> 
+                        Bersyukur atas anugerah pangan yang melimpah dari Tuhan. Wujud syukur kita adalah dengan menghabiskan makanan, tidak membuangnya, dan menghargai setiap karunia-Nya.
+                    </p>
+                    <div class="p-4 rounded-md highlight-text cursor-pointer mt-4">
+                        <p class="font-semibold text-amber-900">"Habiskan makananmu, jangan tersisa."</p>
+                    </div>
+                </div>
+            </div>
+            <div data-href="#piring-sayur" class="sila-link block rounded-lg cursor-pointer interactive-glow">
+                <div id="sila-2" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 sila-card h-full">
+                    <div class="flex items-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Pancasila_Sila_2_Chain.svg/1024px-Pancasila_Sila_2_Chain.svg.png" alt="Lambang Sila ke-2" class="h-10 w-10 mr-3 object-contain cursor-pointer sila-icon-trigger" data-sila-id="2">
+                        <h2 class="text-xl font-bold text-amber-700">
+                             <span class="has-tooltip">Sila ke-2: Peduli<span class="tooltip-text">Kemanusiaan yang Adil dan Beradab</span></span>
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 detail-penjelasan">
+                        <span class="has-tooltip">Terhubung ke kuadran <span class="font-semibold">Sayur-mayur</span>.<span class="tooltip-text">mendukung petani lokal</span></span> 
+                        Menghargai kerja keras para petani dan nelayan. Wujudkan rasa kemanusiaan dengan berbagi makanan dan mendukung produk pangan lokal.
+                    </p>
+                    <div class="p-4 rounded-md highlight-text cursor-pointer mt-4">
+                        <p class="font-semibold text-amber-900">"Berbagi dengan yang lapar, hargai petani."</p>
+                    </div>
+                </div>
+            </div>
+            <div data-href="#piring-lauk" class="sila-link block rounded-lg cursor-pointer interactive-glow">
+                <div id="sila-3" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 sila-card h-full">
+                    <div class="flex items-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Pancasila_Sila_3_Banyan_Tree.svg/1024px-Pancasila_Sila_3_Banyan_Tree.svg.png" alt="Lambang Sila ke-3" class="h-10 w-10 mr-3 object-contain cursor-pointer sila-icon-trigger" data-sila-id="3">
+                        <h2 class="text-xl font-bold text-amber-700">
+                             <span class="has-tooltip">Sila ke-3: Cintai<span class="tooltip-text">Persatuan Indonesia</span></span>
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 detail-penjelasan">
+                        <span class="has-tooltip">Terhubung ke kuadran <span class="font-semibold">Lauk-Pauk</span>.<span class="tooltip-text">lauk pauk kita beragam dari seluruh nusantara</span></span> 
+                        Mencintai dan bangga mengonsumsi keanekaragaman pangan dari berbagai daerah. Setiap suapan makanan lokal adalah cara kita merayakan persatuan bangsa.
+                    </p>
+                    <div class="p-4 rounded-md highlight-text cursor-pointer mt-4">
+                        <p class="font-semibold text-amber-900">"Nikmati ragam pangan lokal dari Sabang sampai Merauke."</p>
+                    </div>
+                </div>
+            </div>
+            <div data-href="#piring-container" class="sila-link block rounded-lg cursor-pointer interactive-glow">
+                <div id="sila-4" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 sila-card h-full">
+                    <div class="flex items-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Pancasila_Sila_4_Buffalo%27s_Head.svg/1024px-Pancasila_Sila_4_Buffalo%27s_Head.svg.png" alt="Lambang Sila ke-4" class="h-10 w-10 mr-3 object-contain cursor-pointer sila-icon-trigger" data-sila-id="4">
+                        <h2 class="text-xl font-bold text-amber-700">
+                            <span class="has-tooltip">Sila ke-4: Diskusi<span class="tooltip-text">Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan</span></span>
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 detail-penjelasan">
+                        <span class="has-tooltip">Menunjuk pada <span class="font-semibold">keseluruhan piring</span>.<span class="tooltip-text">menyimbolkan proses pemilihan</span></span> 
+                        Mengambil keputusan bersama (musyawarah) dalam keluarga untuk menentukan menu makanan yang sehat dan seimbang. Pilihan bijak di meja makan adalah cerminan kebijaksanaan.
+                    </p>
+                    <div class="p-4 rounded-md highlight-text cursor-pointer mt-4">
+                        <p class="font-semibold text-amber-900">"Tentukan menu sehat bersama keluarga."</p>
+                    </div>
+                </div>
+            </div>
+            <div data-href="#piring-pokok" class="sila-link block rounded-lg cursor-pointer interactive-glow">
+                <div id="sila-5" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 sila-card h-full">
+                    <div class="flex items-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Pancasila_Sila_5_Rice_and_Cotton.svg/1024px-Pancasila_Sila_5_Rice_and_Cotton.svg.png" alt="Lambang Sila ke-5" class="h-10 w-10 mr-3 object-contain cursor-pointer sila-icon-trigger" data-sila-id="5">
+                        <h2 class="text-xl font-bold text-amber-700">
+                             <span class="has-tooltip">Sila ke-5: Adil<span class="tooltip-text">Keadilan Sosial bagi Seluruh Rakyat Indonesia</span></span>
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 detail-penjelasan">
+                        <span class="has-tooltip">Terhubung ke kuadran <span class="font-semibold">Makanan Pokok</span>.<span class="tooltip-text">semua berhak atas sumber karbohidrat yang sehat</span></span> 
+                        Memastikan semua orang memiliki hak dan akses yang sama terhadap pangan yang sehat dan bergizi seimbang. Gizi yang adil adalah fondasi keadilan.
+                    </p>
+                    <div class="p-4 rounded-md highlight-text cursor-pointer mt-4">
+                        <p class="font-semibold text-amber-900">"Pastikan semua dapat gizi yang cukup dan seimbang."</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="mt-16 md:mt-24 text-center border-t-2 border-amber-200 pt-8">
+            <h3 class="text-2xl md:text-3xl font-bold text-amber-800 mb-8">
+                Yuk, Wujudkan Nilai Pancasila Mulai dari Piring Kita!
+            </h3>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-gray-500">
+                <a href="https://ayosehat.kemkes.go.id/isi-piringku-kebutuhan-gizi-harian-seimbang" target="_blank" rel="noopener noreferrer" class="transition-transform duration-300 hover:scale-105">
+                    <div class="flex items-center gap-2">
+                        <img src="https://kemkes.go.id/app_asset/image_content/167420049363ca45ad438f30.09191866.png" alt="Logo Kemenkes RI" class="h-12 object-contain">
+                    </div>
+                </a>
+                <p class="text-xs max-w-xs">
+                    Sumber: <a href="https://ayosehat.kemkes.go.id/isi-piringku-kebutuhan-gizi-harian-seimbang" target="_blank" rel="noopener noreferrer" class="underline hover:text-amber-700 transition-colors">Pedoman Gizi Seimbang (Kemenkes RI)</a> & <a href="https://bpip.go.id/public/buku/" target="_blank" rel="noopener noreferrer" class="underline hover:text-amber-700 transition-colors">Materi Pembinaan Ideologi Pancasila (BPIP RI)</a>
+                </p>
+                <a href="https://bpip.go.id/public/buku/" target="_blank" rel="noopener noreferrer" class="transition-transform duration-300 hover:scale-105">
+                    <div class="flex items-center gap-2">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Lambang_Badan_Pembinaan_Ideologi_Pancasila_%282024%29.svg" alt="Logo BPIP RI" class="h-12 object-contain">
+                    </div>
+                </a>
+            </div>
+            <div class="mt-8 text-xs text-gray-400 space-y-1">
+                <p>&copy; 2025 Group. V | All Rights Reserved</p>
+                <p><span id="about-us-trigger" class="cursor-pointer underline hover:text-gray-600 transition-colors">Tentang Kami</span></p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MODALS -->
+    <div id="campaign-modal" class="modal fixed inset-0 bg-black bg-opacity-60 z-50 hidden items-center justify-center p-4 opacity-0">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-md w-full relative transform scale-95">
+            <button id="campaign-modal-close" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <h3 class="text-2xl font-bold text-amber-800 mb-4">Tujuan Kampanye</h3>
+            <p class="text-gray-700">Tujuan kampanye ini adalah untuk menunjukkan bahwa memilih dan mengonsumsi makanan sehat bukan hanya baik untuk tubuh, tetapi juga merupakan wujud nyata dari pengamalan nilai-nilai luhur Pancasila dalam kehidupan sehari-hari.</p>
+        </div>
+    </div>
+    
+    <div id="sila-modal" class="modal fixed inset-0 bg-black bg-opacity-60 z-50 hidden items-center justify-center p-4 opacity-0">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-lg w-full relative transform scale-95">
+            <button id="sila-modal-close" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <h3 id="sila-modal-judul" class="text-xl font-bold text-amber-800 mb-6 text-center"></h3>
+            <div class="flex">
+                <img id="sila-modal-icon" src="" alt="Lambang Sila" class="h-16 w-16 mr-6 object-contain self-start">
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-bold text-gray-800">Makna:</h4>
+                        <p id="sila-modal-makna" class="text-gray-700"></p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800">Aksi Nyata:</h4>
+                        <p id="sila-modal-aksi" class="text-gray-700"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="about-us-modal" class="modal fixed inset-0 bg-black bg-opacity-60 z-50 hidden items-center justify-center p-4 opacity-0">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-lg w-full relative transform scale-95 text-left">
+            <button id="about-us-modal-close" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <p class="mb-4 text-gray-700">Group. V – D3 Gizi XXVI merupakan kelompok yang dibuat untuk tugas mata kuliah Pancasila dengan beranggotakan 10 orang:</p>
+            <ol class="list-decimal list-inside mb-4 pl-2 space-y-1 text-gray-700">
+                <li>AHSIN AQSATH</li>
+                <li>ANGGREYNI THERESIA ANGELY</li>
+                <li>HANNAE PATRICIA ADIEN TRIASILIA</li>
+                <li>LIA ARDANI</li>
+                <li>MELKA</li>
+                <li>MESTA KRISTI INDRIANI</li>
+                <li>NATASYA CLAUSTILA SAPUTRI</li>
+                <li>NOFTALIA</li>
+                <li>OLIVIA</li>
+                <li>SANDRA NABILA</li>
+            </ol>
+            <p class="mb-6 text-gray-700"><i>Campaign website</i> ini, ditujukan untuk menyelesaikan penugasan Project-Based: Kampanye “Menu Sehat & Nilai Pancasila" yang <i>output</i>-nya berupa poster/video kampanye.</p>
+            <div class="text-right space-y-1 text-gray-700">
+                <p>Poltekkes Palangka Raya</p>
+                <p>05 Oktober 2025</p>
+                <p class="mt-4">Salam hangat, <a href="https://www.instagram.com/ahsn_gen.z/" target="_blank" rel="noopener noreferrer" class="font-bold text-amber-700 underline hover:text-amber-600 transition-colors">Kreator</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="qr-code-modal" class="modal fixed inset-0 bg-black bg-opacity-60 z-50 hidden items-center justify-center p-4 opacity-0">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-8 max-w-xs w-full relative transform scale-95 text-center">
+            <button id="qr-code-modal-close" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <h3 class="text-xl font-bold text-amber-800 mb-4">Pindai untuk Membagikan</h3>
+            <img src="https://thumbs2.imgbox.com/97/75/VFWPVbEg_t.png" alt="QR Code for sharing" class="mx-auto">
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const foodLinks = document.querySelectorAll('.plate-grid a');
+            const silaLinks = document.querySelectorAll('.sila-link');
+            const garudaLink = document.querySelector('#garuda-link');
+            const allSilaElements = document.querySelectorAll('.sila-link');
+            const detailToggleTriggers = document.querySelectorAll('.highlight-text');
+            const allDetails = document.querySelectorAll('.detail-penjelasan');
+            const tooltipTriggers = document.querySelectorAll('.has-tooltip');
+            let lastHighlightedElements = [];
+            
+            // Elemen Modal
+            const modals = {
+                campaign: {
+                    trigger: document.getElementById('campaign-trigger'),
+                    modal: document.getElementById('campaign-modal'),
+                    content: document.getElementById('campaign-modal')?.querySelector('.modal-content'),
+                    close: document.getElementById('campaign-modal-close')
+                },
+                sila: {
+                    triggers: document.querySelectorAll('.sila-icon-trigger'),
+                    modal: document.getElementById('sila-modal'),
+                    content: document.getElementById('sila-modal')?.querySelector('.modal-content'),
+                    close: document.getElementById('sila-modal-close')
+                },
+                about: {
+                    trigger: document.getElementById('about-us-trigger'),
+                    modal: document.getElementById('about-us-modal'),
+                    content: document.getElementById('about-us-modal')?.querySelector('.modal-content'),
+                    close: document.getElementById('about-us-modal-close')
+                },
+                qr: {
+                    trigger: document.getElementById('qr-code-button'),
+                    modal: document.getElementById('qr-code-modal'),
+                    content: document.getElementById('qr-code-modal')?.querySelector('.modal-content'),
+                    close: document.getElementById('qr-code-modal-close')
+                }
+            };
+            
+            // Elemen Share
+            const shareButton = document.getElementById('share-button');
+            const shareOptions = document.getElementById('share-options');
+            const copyLinkButton = document.getElementById('copy-link-button');
+
+            // Data Modal Sila
+            const silaData = {
+                '1': { makna: 'Bersyukur atas anugerah pangan yang diberikan oleh Tuhan.', aksi: 'Tidak membuang-buang makanan, menghargai setiap butir nasi, dan berdoa sebelum dan sesudah makan sebagai bentuk rasa syukur.', judul: 'Habiskan Makananmu, Syukuri Anugerah-Nya.' },
+                '2': { makna: 'Peduli terhadap sesama, termasuk memastikan semua orang punya akses terhadap makanan yang layak. Menghargai kerja keras para petani dan nelayan.', aksi: 'Berbagi makanan dengan yang membutuhkan, tidak serakah saat mengambil makanan, dan mendukung produk petani lokal.', judul: 'Piring Sehatmu, Kemanusiaan Untuk Sesama. Dukung Petani Lokal!' },
+                '3': { makna: 'Mencintai dan mengonsumsi keanekaragaman pangan lokal dari berbagai daerah di Indonesia. Makan bersama dapat mempererat persatuan.', aksi: 'Mengonsumsi makanan pokok yang beragam (tidak hanya nasi, tapi juga sagu, jagung, ubi), mencoba masakan dari berbagai suku, dan bangga dengan kuliner Nusantara.', judul: 'Satu Piring Beragam Rasa, Satukan Indonesia. Cintai Pangan Lokal!' },
+                '4': { makna: 'Mengambil keputusan bersama (musyawarah) untuk kebaikan bersama, termasuk dalam menentukan menu makanan keluarga atau di sekolah.', aksi: 'Berdiskusi dengan keluarga untuk menentukan menu makan mingguan yang sehat, memilih menu katering sekolah secara bijaksana.', judul: 'Pilihan Sehat Keluarga, Keputusan Bijak Bersama.' },
+                '5': { makna: 'Semua orang berhak mendapatkan akses terhadap pangan yang sehat dan bergizi seimbang.', aksi: 'Memastikan gizi seimbang untuk semua anggota keluarga, mendukung program pemerintah untuk ketahanan pangan, dan tidak menimbun makanan.', judul: 'Gizi Seimbang Untuk Semua, Wujudkan Keadilan Sosial.' }
+            };
+
+            // --- Functions ---
+            function clearAllHighlights() { lastHighlightedElements.forEach(el => el.classList.remove('highlighted')); lastHighlightedElements = []; }
+            function closeAllDetails() { allDetails.forEach(p => p.classList.remove('expanded')); }
+            function closeAllTooltips() { document.querySelectorAll('.tooltip-text').forEach(tooltip => tooltip.classList.remove('tooltip-visible')); }
+
+            function applyEffects(elements) {
+                if (!Array.isArray(elements)) elements = [elements];
+                elements.forEach(el => {
+                    el.classList.add('clicked-animation');
+                    el.addEventListener('animationend', () => el.classList.remove('clicked-animation'), { once: true });
+                    el.classList.add('highlighted');
+                    lastHighlightedElements.push(el);
+                });
+            }
+
+            function handleInteraction(elementsToHighlight) {
+                const isAlreadyActive = lastHighlightedElements.length > 0 && elementsToHighlight.every(el => lastHighlightedElements.includes(el));
+                clearAllHighlights();
+                if (isAlreadyActive) return;
+                applyEffects(elementsToHighlight);
+                if (elementsToHighlight.includes(garudaLink)) {
+                    allDetails.forEach(detail => detail.classList.add('expanded'));
+                }
+            }
+            
+            function openModal(modal, content) {
+                modal.classList.remove('hidden');
+                setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+            }
+
+            function closeModal(modal, content) {
+                modal.classList.add('opacity-0');
+                content.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hidden'); }, 300);
+            }
+
+            // --- Event Listeners ---
+            foodLinks.forEach(link => { link.addEventListener('click', e => { e.stopPropagation(); closeAllTooltips(); handleInteraction([link]); }); });
+            silaLinks.forEach(link => {
+                link.addEventListener('click', e => {
+                    if (window.getSelection().toString().length > 0 || e.target.closest('.highlight-text') || e.target.closest('.has-tooltip') || e.target.closest('.sila-icon-trigger')) return;
+                    e.stopPropagation();
+                    closeAllTooltips();
+                    const target = document.querySelector(link.dataset.href);
+                    if (target) {
+                        handleInteraction([target]);
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            });
+            if (garudaLink) garudaLink.addEventListener('click', e => { e.stopPropagation(); closeAllTooltips(); handleInteraction([garudaLink, ...allSilaElements]); });
+            detailToggleTriggers.forEach(trigger => {
+                trigger.addEventListener('click', e => {
+                    e.preventDefault(); e.stopPropagation(); closeAllTooltips();
+                    const detail = trigger.closest('.sila-card').querySelector('.detail-penjelasan');
+                    const isExpanded = detail.classList.contains('expanded');
+                    closeAllDetails();
+                    if (!isExpanded) detail.classList.add('expanded');
+                });
+            });
+            tooltipTriggers.forEach(trigger => {
+                trigger.addEventListener('click', e => {
+                    e.preventDefault(); e.stopPropagation();
+                    const tooltip = trigger.querySelector('.tooltip-text');
+                    const isVisible = tooltip.classList.contains('tooltip-visible');
+                    closeAllTooltips();
+                    if (!isVisible) tooltip.classList.add('tooltip-visible');
+                });
+            });
+            
+            Object.values(modals).forEach(item => {
+                const { trigger, triggers, modal, content, close } = item;
+                if (trigger) trigger.addEventListener('click', e => { e.stopPropagation(); openModal(modal, content); });
+                if (triggers) triggers.forEach(t => t.addEventListener('click', e => {
+                    e.preventDefault(); e.stopPropagation();
+                    const data = silaData[t.dataset.silaId];
+                    if (data) {
+                        document.getElementById('sila-modal-icon').src = t.src;
+                        document.getElementById('sila-modal-judul').textContent = data.judul;
+                        document.getElementById('sila-modal-makna').textContent = data.makna;
+                        document.getElementById('sila-modal-aksi').textContent = data.aksi;
+                        openModal(modal, content);
+                    }
+                }));
+                close?.addEventListener('click', () => closeModal(modal, content));
+                modal?.addEventListener('click', e => { if (e.target === modal) closeModal(modal, content); });
+            });
+            
+            if (shareButton) {
+                shareButton.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const shareUrl = 'https://ahsngenz.github.io/Isi-Piringku-Cerminan-Pancasilaku/';
+                    const shareText = encodeURIComponent('Isi Piringku, Cerminan Pancasilaku - Sebuah kampanye untuk memahami nilai-nilai luhur Pancasila melalui panduan gizi seimbang.');
+                    document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${shareText} ${shareUrl}`;
+                    document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+                    shareOptions.classList.toggle('hidden');
+                });
+            }
+            if(copyLinkButton) {
+                copyLinkButton.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const url = 'https://ahsngenz.github.io/Isi-Piringku-Cerminan-Pancasilaku/';
+                    navigator.clipboard.writeText(url).then(() => {
+                        const originalContent = copyLinkButton.innerHTML;
+                        copyLinkButton.innerHTML = `<svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                        copyLinkButton.title = "Link Disalin!";
+                        setTimeout(() => {
+                            copyLinkButton.innerHTML = originalContent;
+                            copyLinkButton.title = "Salin Link";
+                        }, 2000);
+                    }, () => { // Fallback for older browsers or secured contexts
+                        const textarea = document.createElement('textarea');
+                        textarea.value = url;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+
+                        const originalContent = copyLinkButton.innerHTML;
+                        copyLinkButton.innerHTML = `<svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                        copyLinkButton.title = "Link Disalin!";
+                        setTimeout(() => {
+                            copyLinkButton.innerHTML = originalContent;
+                            copyLinkButton.title = "Salin Link";
+                        }, 2000);
+                    });
+                });
+            }
+
+            document.body.addEventListener('click', () => {
+                clearAllHighlights();
+                closeAllDetails();
+                closeAllTooltips();
+                shareOptions?.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
+
